@@ -132,28 +132,8 @@ const SignUp = () => {
                     email: email,
                     password: password,
                 }
-                // Replace Default Port with  API endpoint
-                try {
-                    
-                    const response = await axios.post(`https://health-insight-ai.vercel.app/api/save-Signup`, data, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
-                    console.log('Data sent:', response.data);
-                    setsendDataApi(true);
-                }
-                catch (error) {
-                    console.error('Error sending data:', error);
-                }
-
-                // if (sendDataApi)
-                //     console.log(sendDataApi)
                 navigate('/SignUpForm');
-            
-
         }
-
     };
 
     const SignInWithGoogle = async (e) => {

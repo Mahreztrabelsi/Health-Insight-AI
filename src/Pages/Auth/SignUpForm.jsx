@@ -12,7 +12,6 @@ import { getAuth } from 'firebase/auth';
 import { ToastContainer, toast } from 'react-toastify';
 import { db } from '../../Config/firebase'
 import { collection, getDocs, addDoc, setDoc, doc } from 'firebase/firestore'
-import axios from 'axios';
 import { Timestamp } from 'firebase/firestore'
 
 
@@ -29,6 +28,12 @@ export default function SignUpForm() {
     const patientCollectionRef = collection(db, "patient");
 
     const [idd, setIdd] = useState("");
+    const [Fr, setFr] = useState("");
+    const [Ls, setLs] = useState("");
+    const [Em, setEm] = useState("");
+    const [Ps, setPs] = useState("");
+
+
 
     const getPatient = async () => {
         try {
@@ -36,6 +41,10 @@ export default function SignUpForm() {
             data.docs.filter((profile) => {
                 auth?.currentUser?.uid === profile.data().userId ? setPatient([{ ...profile.data(), id: profile.id }]) : "Error getting patient";
                 setIdd(profile.id)
+                setFr(profile.data().FirstName)
+                setLs(profile.data().LastName)
+                setEm(profile.data().Email)
+                setPs(profile.data().Password)
             })
         }
         catch (error) {
@@ -43,29 +52,9 @@ export default function SignUpForm() {
         }
     }
 
-
-
-
-    const port = process.env.PORT || 8080;
-    console.log("Port: " + port)
-    const [userData, setUserData] = useState({});
-    const getData = async () => {
-        // Replace Default Port with  API endpoint
-        try {
-            const response = await axios.get(`https://health-insight-ai.vercel.app/api/fetch-Signup`);
-            setUserData(response.data);
-        } catch (error) {
-            console.error('Error fetching User data:', error);
-        }
-    };
-
-
     useEffect(() => {
-        getData();
         getPatient();
     }, []);
-
-
 
 
 
@@ -182,11 +171,11 @@ export default function SignUpForm() {
 
             // Add Patient To The Database
             setDoc(patientDoc, {
-                FirstName: userData.firstname,
-                LastName: userData.lastname,
-                Email: userData.email,
+                FirstName: Fr,
+                LastName: Ls,
+                Email: Em,
                 Age: age,
-                Password: userData.password,
+                Password: Ps,
                 PhoneNum: fullNmber,
                 userId: auth?.currentUser?.uid,
                 Country: country,
@@ -199,11 +188,11 @@ export default function SignUpForm() {
                 });
 
             try {
-                const notificationContent = `Welcome to Our Community! Congratulations on joining us ${userData.firstname + ' ' + userData.lastname}! We're thrilled to have you here.
+                const notificationContent = `Welcome to Our Community! Congratulations on joining us ${Fr + ' ' + Ls}! We're thrilled to have you here.
                 Explore, connect, and make the most of your experience. If you have any questions, we're here to help.
                 Let's get started on this exciting journey together!`
                 addDoc(NotificationCollectionRef, {
-                    Title: userData.firstname + ' ' + userData.lastname,
+                    Title: Fr + ' ' + Ls,
                     notificationContent: notificationContent,
                     notificationDateStamp: Timestamp.fromDate(new Date()),
                     notificationIdId: Math.random().toString(36).substr(2, 9),
@@ -212,7 +201,6 @@ export default function SignUpForm() {
             } catch (err) {
                 alert(err.message);
             }
-
 
             // Navigate to Verification Page 
             navigate("/Verification")
@@ -226,44 +214,47 @@ export default function SignUpForm() {
     return (
 
 
-        <div className=' w-8/12 m-auto  grid grid-cols-1 max-md:w-full max-md:h-full max-lg:w-11/12  bg-slate-200  shadow-xl h-full   p-5'>
-            <h1 className='text-2xl font-bold my-6  text-purple-700'>Fill Out The Form</h1>
-            <div className='w-full h-auto  grid grid-cols-2 max-md:grid-cols-1 text-center'>
+        <div className=' w-8/12 m-auto  grid grid-cols-1 max-md:w-full max-md:h-full max-lg:w-11/12 xl:h-screen   shadow-xl h-full   p-5'>
+            <h1 className=' font-bold my-6  text-purple-700'>Fill Out The Form</h1>
+                <div className='w-full h-auto  grid grid-cols-2 max-md:grid-cols-1 text-center'>
 
-                <Box
-                    component="form"
-                    sx={{ m: 1, width: 300, height: 100 }}
-                    noValidate
-                    autoComplete="off"
-                >
-
-                    <TextField
-                        disabled="true"
-                        id="outlined-read-only-input"
-                        label="Full Name"
-                        value={userData.firstname + " " + userData.lastname}
-                    />
-
-                </Box>
+                    <Box
+                        component="form"
+                        sx={{ m: 1, width: 300, height: 100 }}
+                        noValidate
+                        autoComplete="off"
+                    >
 
 
-                <Box
-                    component="form"
-                    sx={{ m: 1, width: 300, height: 100 }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <TextField
-                        disabled="true"
-                        id="outlined-read-only-input"
-                        label="Email"
-                        value={userData.email}
-                    />
-                </Box>
-            </div>
+
+                        <TextField
+                            disabled="true"
+                            id="outlined-read-only-input"
+                            label="Full Name"
+                            value={Fr + " " + Ls}
+                        />
+
+                    </Box>
 
 
-            <h1 className='text-2xl font-bold my-6  text-purple-700'>BirthDay and Gender:</h1>
+                    <Box
+                        component="form"
+                        sx={{ m: 1, width: 300, height: 100 }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField
+                            disabled="true"
+                            id="outlined-read-only-input"
+                            label="Email"
+                            value={Em}
+                        />
+                    </Box>
+                </div>
+
+
+
+            <h1 className=' font-bold my-6  text-purple-700'>BirthDay and Gender:</h1>
             <div className='w-full m-auto grid grid-cols-3 max-md:grid-cols-1 place-items-center '>
                 <Box sx={{ m: 1, width: 180, height: 100 }}>
                     <FormControl fullWidth>
@@ -352,7 +343,7 @@ export default function SignUpForm() {
             </div>
 
 
-            <h1 className='text-2xl font-bold my-6  text-purple-700'>Phone Number and Country :</h1>
+            <h1 className=' font-bold my-6  text-purple-700'>Phone Number and Country :</h1>
             <div className='w-full m-auto grid grid-cols-2 max-md:grid-cols-1 place-items-center '>
                 <Autocomplete
                     id="country-select-demo"
@@ -410,7 +401,7 @@ export default function SignUpForm() {
                 </Box>
             </div>
             <div className=' m-auto w-11/12 flex justify-end'>
-                <button className='bg-purple-800 px-8 py-2.5 text-white font-semibold rounded-lg' variant="contained" onClick={handleSubmit}>
+                <button className='bg-purple-800 px-8 py-2.5 text-white font-semibold rounded-lg shadow-lg' variant="contained" onClick={handleSubmit}>
                     Continue
                 </button>
             </div>

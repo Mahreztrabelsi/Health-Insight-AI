@@ -58,7 +58,6 @@ const Verif = () => {
         location.reload();
     }
 
-    console.log(isverified)
 
     return (
         <div className='w-full h-screen flex justify-center items-center'>
