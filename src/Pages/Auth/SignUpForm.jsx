@@ -51,9 +51,8 @@ export default function SignUpForm() {
     const [userData, setUserData] = useState({});
     const getData = async () => {
         // Replace Default Port with  API endpoint
-        const API_URL = 'https://health-insight-ai.vercel.app/';
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/fetch-Signup`);
+            const response = await axios.get(`https://health-insight-ai.vercel.app/api/fetch-Signup`);
             setUserData(response.data);
         } catch (error) {
             console.error('Error fetching User data:', error);

@@ -133,9 +133,9 @@ const SignUp = () => {
                     password: password,
                 }
                 // Replace Default Port with  API endpoint
-                const API_URL = 'https://health-insight-ai.vercel.app/';
                 try {
-                    const response = await axios.post(`${process.env.REACT_APP_API_URL}/save-Signup`, data, {
+                    
+                    const response = await axios.post(`https://health-insight-ai.vercel.app/api/save-Signup`, data, {
                         headers: {
                             'Content-Type': 'application/json',
                         },
