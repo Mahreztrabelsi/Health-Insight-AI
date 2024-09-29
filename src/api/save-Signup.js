@@ -1,7 +1,7 @@
 let userstoredData = {};
 
 export default function handler(req, res) {
-    if (req.method === 'POST') {
+    if (req.method === 'post') {
         userstoredData = req.body;
         res.json({ message: 'User Data saved successfully' });
     } else {
